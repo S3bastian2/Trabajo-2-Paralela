@@ -78,12 +78,17 @@ void crew_search(int secuencia[], int tamañoSecuencia, int elementoBuscado, int
 	char direccionInicial = 'R'; //Aqui se posiciona para buscar hacia la derecha.
 	char direccionFinal = 'L'; //Se posiciona para buscar hacia el lado izquierdo.
 
+	printf("q = %d\nr = %d\n", indiceInicio, indiceFin);
+	printf("c[0] = %c, c[%d] = %c\n", direccionInicial, numProcesadores, direccionFinal);
+	printf("k = %d, g = %d\n\nEntra al while\n",posicionEncontrada, numEtapas);
+
 	//Bucle principal de busqueda.
 	while (indiceInicio <= indiceFin && posicionEncontrada == 0) {
 		//Si ya no quedan etapas validas entonces salimos del programa.
 		if (numEtapas <= 0) {
 			break;
 		}
+
 		int fronteraInicial = indiceInicio - 1; //Frontera del primer procesador. 
 		char direccionBusqueda[numProcesadores + 2]; //Arreglo de los valores pivotes que seran asignados con 'R' o 'L'.
 		int fronteraProcesador[numProcesadores + 1]; //Indices frontera.
@@ -96,12 +101,15 @@ void crew_search(int secuencia[], int tamañoSecuencia, int elementoBuscado, int
 		//Aquí se calcula el numero de saltos, osea cuantas rondas debe de hacer el algoritmo para hallar la seccion en donde se encuentre el valor que queremos.
 		int paso = pow_int(numProcesadores + 1, numEtapas - 1);
 
+
 		printf("arreglo actual\n{");
 		for(int i = indiceInicio -1; i<indiceFin; i++){
 			printf((i == indiceFin-1)?"%d":"%d, ", secuencia[i]);
 		}	
 		printf("}\n");
 
+		printf("j[%d] = %d", 0, fronteraProcesador[0]);
+		printf(" : c[%d] = %c\n", 0, direccionBusqueda[0]);
 		/* --------------------------------------------------------
            SECCIÓN PARALELIZABLE
            En una versión paralela, cada procesador Pi ejecutaría
@@ -127,17 +135,18 @@ void crew_search(int secuencia[], int tamañoSecuencia, int elementoBuscado, int
 				fronteraProcesador[i] = indiceFin - 1;
 				direccionBusqueda[i] = 'L';
 			}
+
 			if(endReached) continue;
 
 			endReached = (fronteraProcesador[i-1] == fronteraProcesador[i]);
-			printf("flag[%d] : ", fronteraProcesador[i -1]+1);
-			printf((endReached)?"%c":"%c, ", direccionBusqueda[i]);
+			printf("j[%d] = %d :", i, fronteraProcesador[i-1]+1);
+			printf(" c[%d] = ", i);
+			printf((endReached || i == numProcesadores)?"%c":"%c\n", direccionBusqueda[i]);
 		}
 
 
 		// --FIN DE LA SECCION PARALELA.
 
-		printf("\n\n");
 		/* --------------------------------------------------------
            ACTUALIZACIÓN DE LÍMITES
            Solo un procesador (el que detecta el cambio de dirección)
@@ -160,6 +169,7 @@ void crew_search(int secuencia[], int tamañoSecuencia, int elementoBuscado, int
 		}
 		//Se van reduciendo las busquedas en cada iteración, así se hace mas pequeña el area de busqueda.
 		numEtapas--;
+		printf("\ng = %d\n\n", numEtapas);
 	}
 
 	// --Resultado--
