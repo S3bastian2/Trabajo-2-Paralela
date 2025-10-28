@@ -27,6 +27,10 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#define n  200		//numero de elementos de S
+#define N 10		//numero de procesadores
+#define x 122		//elemento a buscar
+
 
 
 /* ------------------------------------------------------------
@@ -78,6 +82,7 @@ void crew_search(int secuencia[], int tamañoSecuencia, int elementoBuscado, int
 	char direccionInicial = 'R'; //Aqui se posiciona para buscar hacia la derecha.
 	char direccionFinal = 'L'; //Se posiciona para buscar hacia el lado izquierdo.
 
+	printf("call crewSearch\n");
 	printf("q = %d\nr = %d\n", indiceInicio, indiceFin);
 	printf("c[0] = %c, c[%d] = %c\n", direccionInicial, numProcesadores, direccionFinal);
 	printf("k = %d, g = %d\n\nEntra al while\n",posicionEncontrada, numEtapas);
@@ -192,17 +197,9 @@ void crew_search(int secuencia[], int tamañoSecuencia, int elementoBuscado, int
 ------------------------------------------------------------ */
 
 int main() {
-	int numeroValores;
+	int numeroValores = n;
 	int *secuencia;
 
-	//Se verifica que el valor entregado si se encuentre entre los rangos pedidos.
-	printf("Ingresa un N para generar la secuencia de numeros.\n");
-	scanf("%d", &numeroValores);
-	while (numeroValores < 16 || numeroValores > 500) {
-		printf("Error: el número debe estar entre 16 y 500.\n");
-		printf("Ingrese nuevamente un N:\n");
-		scanf("%d", &numeroValores);
-	}
 	//Asignación de memoria dinamica del arreglo 'Secuencia'.
 	secuencia = (int *)malloc(numeroValores*sizeof(int));
 	if (secuencia == NULL) {
@@ -216,8 +213,8 @@ int main() {
 	//int secuencia[] = {2, 5, 8, 12, 16, 23, 38, 56, 72, 91};
 	//Parametros de busqueda.
 	int tamañoSecuencia = numeroValores;
-	int elementoBuscado = 23;
-	int numProcesadores = 10;
+	int elementoBuscado = x;
+	int numProcesadores = N;
 
 	//verificación con respecto a que si el valor buscado supera el tamaño del arreglo, entonces no los busque porque no lo encontrara.
 	if (elementoBuscado >= tamañoSecuencia) {
